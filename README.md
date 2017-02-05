@@ -21,8 +21,28 @@ Example entry:
 </Placemark>
 
 Merge this with data from pco.csv.
+
 Calculate "middle" point of polygon. Ex code: https://github.com/manuelbieh/Geolib#geolibgetcenterarray-coords
 
-Throw all this into elasticsearch. https://www.elastic.co/guide/en/elasticsearch/reference/current/geo-queries.html
+TODO: Some precints are defined as 'multipolygons' - figure out how to calculate the centroid for them...
+* 2802
+* 3290
+* 315
+* 339
+* 2959
+* 3219
+* 411
+* 416
+* 3626
+* 3380
+* 709
+* 2659
+* 3444
+* 1091
+* 1097
+* 1216
+* 2680
 
-Then on query, can use geo_shape to find person's precinct + geo_distance to find all within x distance.
+TODO: Throw all this into elasticsearch. https://www.elastic.co/guide/en/elasticsearch/reference/current/geo-queries.html
+
+TODO: Then on query, can use geo_shape to find person's precinct + geo_distance to find all within x distance.
