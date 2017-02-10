@@ -3,6 +3,42 @@
 import xml.etree.ElementTree as ET
 import csv, json
 
+vashon_precincts = {
+    'BILOXI',
+    'DOLPHIN',
+    'CARPENTER',
+    'DILWORTH',
+    'COLVOS',
+    'COVE',
+    'VASHON',
+    'BAKER',
+    'CHAUTAUQUA',
+    'LISABEULA',
+    'CROSS',
+    'QUARTERMASTER',
+    'SEALTH',
+    'TAHLEQUAH',
+    'SHAWNEE',
+    'BURTON',
+    'PORTAGE',
+    'MAURY',
+    'DOCKTON'
+}
+
+white_center_precincts = {
+    'SUNNYWOOD',
+    'SEAVIEW',
+    'REGAL',
+    'WYNONA',
+    'WHITE CENTER',
+    'MARIAN',
+    'EVERGREEN',
+    'SYLVAN',
+    'BERNICE',
+    'GLASGOW'
+}
+
+
 def convert_pco(row):
     result = {}
     for key in ['nick', 'first', 'm', 'last', 'suffix', 'status', 'approved', 'start']:
@@ -60,7 +96,7 @@ def centroid(poly):
         j = i
 
     six_area = area(poly) * 6
-    return {'type': 'Point', 'coordinates': [y_total / six_area, x_total / six_area]}
+    return {'type': 'point', 'coordinates': [y_total / six_area, x_total / six_area]}
 
 # machinations to convert the string that looks like "lat,long lat,long..."
 # to [['lat','long'],['lat','long'],...]
@@ -94,32 +130,33 @@ for placemark in folder:
     if placemark.tag != '{http://www.opengis.net/kml/2.2}Placemark':
         continue
     name = placemark[0].text
-    # style = placement[1]
-    ident = int(placemark[2][0][0].text)
-    # count is stored as a float for some reason.
-    voter_count = int(float(placemark[2][0][1].text))
-    area_val = float(placemark[2][0][2].text)
-    # https://tools.ietf.org/html/rfc7946
-    geometry_item = placemark[3]
-    geometry = {}
-    center = None
-    if geometry_item.tag.endswith('Polygon'):
-        geometry = {'type':'polygon', 'coordinates':convert_polygon(geometry_item)}
-        center = centroid(geometry)
-    elif geometry_item.tag.endswith('MultiGeometry'):
-        coordinates = []
-        for polygon in geometry_item:
-            coordinates.append(convert_polygon(polygon))
-        geometry = {'type':'multipolygon', 'coordinates':coordinates}
+    if name in vashon_precincts or name in white_center_precincts or name.startswith('SEA 34-') or name.startswith('BUR 34-'):
+        # style = placement[1]
+        ident = int(placemark[2][0][0].text)
+        # count is stored as a float for some reason.
+        voter_count = int(float(placemark[2][0][1].text))
+        area_val = float(placemark[2][0][2].text)
+        # https://tools.ietf.org/html/rfc7946
+        geometry_item = placemark[3]
+        geometry = {}
+        center = None
+        if geometry_item.tag.endswith('Polygon'):
+            geometry = {'type':'polygon', 'coordinates':convert_polygon(geometry_item)}
+            center = centroid(geometry)
+        elif geometry_item.tag.endswith('MultiGeometry'):
+            coordinates = []
+            for polygon in geometry_item:
+                coordinates.append(convert_polygon(polygon))
+            geometry = {'type':'multipolygon', 'coordinates':coordinates}
 
-    precinct = {
-        'id' : ident,
-        'name' : name,
-        'voter_count' : voter_count,
-        'area' : area_val,
-        'location' : geometry,
-        'centroid' : center,
-        'pco' : pcos.get(ident)
-    }
-    with open('../34dems/out/' + str(ident) + '.json', 'w') as outfile:
-        json.dump(precinct, outfile, indent=2)
+        precinct = {
+            'id' : ident,
+            'name' : name,
+            'voter_count' : voter_count,
+            'area' : area_val,
+            'location' : geometry,
+            'centroid' : center,
+            'pco' : pcos.get(ident)
+        }
+        with open('precincts/chalicelib/' + str(ident) + '.json', 'w') as outfile:
+            json.dump(precinct, outfile, indent=2)

@@ -1,5 +1,26 @@
 # 34DemsPCOMap
 
+## API Design
+
+### GET by precinct id
+
+GET /precincts/{id}
+
+Should return entire json doc generated above.
+
+### GET precinct by latlong
+
+GET /precincts?lat={latitude}&long={longitude}
+
+Will return the precinct that includes the given latlongs or 404 if there is no such precinct.
+
+### GET nearest precints by latlong
+
+GET /precincts?lat={latitude}&long={longitude}&dist={distance}
+
+Will return the precincts within {distance} of the given latlongs or 404 if there is no such precinct. TODO: Should provide ability to exclude the precinct if it would have been returned by the previous API?
+
+
 ## Data processing
 
 Map data is in KML format: https://en.wikipedia.org/wiki/Keyhole_Markup_Language
@@ -45,7 +66,10 @@ TODO: Some precints are defined as 'multipolygons' - figure out how to calculate
 * 1216
 * 2680
 
-TODO: Throw all this into elasticsearch. https://www.elastic.co/guide/en/elasticsearch/reference/current/geo-queries.html
+Ok, it seems like elasticsearch is post-filtering, so may not be helpful. I've filtered out all non-34th in the munger, so this _should_ work, but I've only tested locally. Will deploy to lambda later.
+
+TODO: Throw all this into elasticsearch.
+https://www.elastic.co/guide/en/elasticsearch/reference/current/geo-queries.html
 https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-distance-query.html
 https://www.elastic.co/guide/en/elasticsearch/reference/1.4/mapping-geo-shape-type.html
 

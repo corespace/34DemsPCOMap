@@ -1,0 +1,3 @@
+I think elasticsearch might be overkill, especially if it just post-processes. let's just do the geometry calcs ourself (via a library duh)
+
+Also, figure out how to tell which LD these things are in and delete the ones not in our LD (in the munger code)
