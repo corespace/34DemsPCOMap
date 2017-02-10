@@ -74,3 +74,4 @@ https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-di
 https://www.elastic.co/guide/en/elasticsearch/reference/1.4/mapping-geo-shape-type.html
 
 TODO: Then on query, can use geo_shape to find person's precinct + geo_distance to find all within x distance.
+

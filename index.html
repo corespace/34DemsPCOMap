@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="css/map.css">
+    <!--Script for initializing the map-->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBWpOQ0c4ITOYol7CWwaDqaK6rsgYQW7OU&libraries=drawing"
+    async defer></script>
+    <script type="text/javascript" src="js/map.js"></script>
+</script>
+  </head>
+  <body onload="InitMap()">
+    <div id="map"></div>
+    <div>
+      <input type="textbox" name="Address" id="address">
+      <input type="button" name="submit" value="Submit" onclick="GeoCodeAddress()">
+    </div>
+  </body>
+</html>
