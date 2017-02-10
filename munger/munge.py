@@ -122,8 +122,8 @@ def convert_polygon(polygon_item):
         coordinates.append(convert_string_to_coordinate_list(latlongs_text))
     return coordinates
 
-pcos = build_precinct_dict('../34dems/pco.csv')
-path = '../34dems/votdst_area/votdst_area.kml'
+pcos = build_precinct_dict('munger/pco.csv')
+path = 'munger/votdst_area.kml'
 tree = ET.parse(path)
 folder = tree.getroot()[0][1]
 for placemark in folder:
