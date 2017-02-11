@@ -96,7 +96,7 @@ def centroid(poly):
         j = i
 
     six_area = area(poly) * 6
-    return {'type': 'point', 'coordinates': [y_total / six_area, x_total / six_area]}
+    return {'type': 'Point', 'coordinates': [y_total / six_area, x_total / six_area]}
 
 # machinations to convert the string that looks like "lat,long lat,long..."
 # to [['lat','long'],['lat','long'],...]
@@ -138,25 +138,28 @@ for placemark in folder:
         area_val = float(placemark[2][0][2].text)
         # https://tools.ietf.org/html/rfc7946
         geometry_item = placemark[3]
-        geometry = {}
+        geometryObj = {}
         center = None
         if geometry_item.tag.endswith('Polygon'):
-            geometry = {'type':'polygon', 'coordinates':convert_polygon(geometry_item)}
-            center = centroid(geometry)
+            geometryObj = {'type':'Polygon', 'coordinates':convert_polygon(geometry_item)}
+            center = centroid(geometryObj)
         elif geometry_item.tag.endswith('MultiGeometry'):
             coordinates = []
             for polygon in geometry_item:
                 coordinates.append(convert_polygon(polygon))
-            geometry = {'type':'multipolygon', 'coordinates':coordinates}
+            geometryObj = {'type':'MultiPolygon', 'coordinates':coordinates}
 
         precinct = {
-            'id' : ident,
-            'name' : name,
-            'voter_count' : voter_count,
-            'area' : area_val,
-            'location' : geometry,
-            'centroid' : center,
-            'pco' : pcos.get(ident)
+            'type' : 'Feature',
+            'geometry' : geometryObj,
+            'properties' : {
+                'id' : ident,
+                'name' : name,
+                'voter_count' : voter_count,
+                'area' : area_val,
+                'centroid' : center,
+                'pco' : pcos.get(ident)
+            }
         }
         with open('precincts/chalicelib/' + str(ident) + '.json', 'w') as outfile:
             json.dump(precinct, outfile, indent=2)
