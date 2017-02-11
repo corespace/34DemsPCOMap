@@ -20,13 +20,16 @@ def getById(id):
 @app.route('/precincts', methods=['GET'], cors=True)
 def getAll():
     files = [f for f in os.listdir(libdir) if os.path.isfile(os.path.join(libdir, f))]
-    allP = {}
+    featuresList = []
     for f in files:
         (ident, ext) = os.path.splitext(f)
         with open(os.path.join(libdir, f)) as jsonfile:
-            allP[ident] = json.load(jsonfile)
+            featuresList.append(json.load(jsonfile))
 
-    return allP
+    return {
+        'type' : 'FeatureCollection',
+        'features' : featuresList
+    }
 
 if __name__ == '__main__':
     print json.dumps(getAll())
