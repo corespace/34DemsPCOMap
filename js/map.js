@@ -25,7 +25,7 @@ var InitMap = function() {
     zoom: 11
   });
   globals = new Globals(map, geocoder);
-
+  DrawAllPrecincts();
 }
 
 var GeoCodeAddress = function() {
@@ -41,4 +41,10 @@ var GeoCodeAddress = function() {
       alert('Geocode was not successful for the following reason: ' + status);
     }
   });
+}
+
+var DrawAllPrecincts = function() {
+  var url = "https://xv1zwa82p7.execute-api.us-east-1.amazonaws.com/dev/precincts";
+
+  globals.GetMap().data.loadGeoJson(url)
 }
