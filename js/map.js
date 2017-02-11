@@ -46,5 +46,13 @@ var GeoCodeAddress = function() {
 var DrawAllPrecincts = function() {
   var url = "https://xv1zwa82p7.execute-api.us-east-1.amazonaws.com/dev/precincts";
 
-  globals.GetMap().data.loadGeoJson(url)
+  globals.GetMap().data.loadGeoJson(url);
+  //Set any precinct that has no PCO to red
+  globals.GetMap().data.setStyle(function(feature) {
+    var pco = feature.getProperty('pco');
+    var color = pco ? 'white' : 'red';
+    return {
+      fillColor: color,
+    };
+  });
 }
