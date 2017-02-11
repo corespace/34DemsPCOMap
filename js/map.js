@@ -39,7 +39,7 @@ var InitMap = function() {
 }
 
 var GeoCodeAddress = function() {
-  var address = document.getElementById('address').value;
+  var address = document.getElementById('address-box').value;
   globals.GetGeocoder().geocode( { 'address': address}, function(results, status) {
     if (status == 'OK') {
       globals.GetMap().setCenter(results[0].geometry.location);
@@ -47,6 +47,9 @@ var GeoCodeAddress = function() {
           map: globals.GetMap(),
           position: results[0].geometry.location
       });
+      globals.GetInfoWindow().close();
+      //CreateInfoWindow();
+      //globals.GetInfoWindow().open(globals.GetMap(), marker);
     } else {
       alert('Geocode was not successful for the following reason: ' + status);
     }
@@ -75,7 +78,7 @@ var DrawAllPrecincts = function() {
   });
 }
 
-//Change this to return new info window
+
 var CreateInfoWindow = function(feature) {
     var pcoContent = '<div id="content">'
       + '<h3>Precinct: ' + feature.getProperty('name') + '</h3>';
